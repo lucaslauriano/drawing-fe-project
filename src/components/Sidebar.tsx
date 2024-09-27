@@ -1,8 +1,8 @@
 'use client';
 
 import { useDrawingContext } from '@/contexts/DrawningProvider';
-import { FaHouse, FaTextHeight } from 'react-icons/fa6';
-import { BiSolidEraser, BiSolidPen, BiSolidTrash } from 'react-icons/bi';
+import { FaHouse, FaPen, FaTextHeight } from 'react-icons/fa6';
+import { BiSolidEraser, BiSolidTrash } from 'react-icons/bi';
 import { Tool } from '@/types/entities.d';
 import { useRouter } from 'next/navigation';
 
@@ -25,7 +25,7 @@ const Sidebar: React.FC = () => {
           onClick={() => setTool(Tool.DRAW)}
           className={`p-2 ${tool === Tool.DRAW ? 'bg-gray-700' : ''}`}
         >
-          <BiSolidPen
+          <FaPen
             size={20}
             title={Tool.DRAW}
             className={tool === Tool.DRAW ? 'text-white' : 'text-gray-200'}

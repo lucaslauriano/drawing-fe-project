@@ -4,11 +4,11 @@ import { useDrawingContext } from '@/contexts/DrawningProvider';
 import {
   Tool,
   LineCap,
+  ToolProps,
   CANVAS_WIDTH,
   CANVAS_HEIGHT,
   INITIAL_LINE_WIDTH,
   GlobalCompositeOperation,
-  ToolProps,
 } from '@/types/entities.d';
 import { classNames } from '@/utils/classNames';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -37,6 +37,13 @@ const DrawingBoard = () => {
     initCanvas();
   }, [initCanvas]);
 
+  const resetGlobalCompositeOperation = () => {
+    if (contextRef.current) {
+      contextRef.current.globalCompositeOperation =
+        GlobalCompositeOperation.SOURCE_OVER;
+    }
+  };
+
   const handleFinishDrawing = () => {
     if (contextRef.current) {
       contextRef.current.closePath();
@@ -48,6 +55,8 @@ const DrawingBoard = () => {
     const { offsetX, offsetY } = event.nativeEvent;
 
     if (tool === Tool.TEXT) {
+      resetGlobalCompositeOperation();
+
       const text = prompt('Enter your text:');
       if (text && contextRef.current) {
         contextRef.current.font = `${size * 2}px Arial`;
