@@ -1,25 +1,41 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useDrawingContext } from '@/contexts/DrawningProvider';
+import {
+  Tool,
+  LineCap,
+  CANVAS_WIDTH,
+  CANVAS_HEIGHT,
+  INITIAL_LINE_WIDTH,
+  GlobalCompositeOperation,
+  ToolProps,
+} from '@/types/entities.d';
+import { classNames } from '@/utils/classNames';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 const DrawingBoard = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
+  const { tool, size, color } = useDrawingContext();
 
-  useEffect(() => {
+  const initCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    canvas.width = 1000;
-    canvas.height = 600;
+    canvas.width = CANVAS_WIDTH;
+    canvas.height = CANVAS_HEIGHT;
     const context = canvas.getContext('2d');
     if (!context) return;
 
-    context.lineCap = 'round';
-    context.lineWidth = 5;
+    context.lineCap = LineCap.ROUND;
+    context.lineWidth = INITIAL_LINE_WIDTH;
     contextRef.current = context;
   }, []);
+
+  useEffect(() => {
+    initCanvas();
+  }, [initCanvas]);
 
   const handleFinishDrawing = () => {
     if (contextRef.current) {
@@ -28,32 +44,68 @@ const DrawingBoard = () => {
     setIsDrawing(false);
   };
 
-  const handleStartDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (canvasRef.current) {
-      const ctx = canvasRef.current.getContext('2d');
-      if (ctx) {
-        ctx.beginPath();
-        ctx.lineWidth = 5;
-        ctx.lineCap = 'round';
-        ctx.strokeStyle = 'black';
-        ctx.moveTo(e.clientX, e.clientY);
-        canvasRef.current.onmousemove = (e) => {
-          ctx.lineTo(e.clientX, e.clientY);
-          ctx.stroke();
-        };
-        canvasRef.current.onmouseup = handleFinishDrawing;
+  const handleStartDrawing = (event: React.MouseEvent<HTMLCanvasElement>) => {
+    const { offsetX, offsetY } = event.nativeEvent;
+
+    if (tool === Tool.TEXT) {
+      const text = prompt('Enter your text:');
+      if (text && contextRef.current) {
+        contextRef.current.font = `${size * 2}px Arial`;
+        contextRef.current.fillStyle = color;
+        contextRef.current.fillText(text, offsetX, offsetY);
       }
+    } else if (contextRef.current) {
+      contextRef.current.beginPath();
+      contextRef.current.moveTo(offsetX, offsetY);
+      setIsDrawing(true);
     }
   };
 
-  const handleDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    console.log(e);
+  const handleDrawing = (event: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isDrawing || tool === Tool.TEXT) return;
+
+    const { offsetX, offsetY } = event.nativeEvent;
+
+    if (contextRef.current) {
+      contextRef.current.lineTo(offsetX, offsetY);
+
+      if (tool === Tool.ERASE) {
+        contextRef.current.globalCompositeOperation =
+          GlobalCompositeOperation.DESTINATION_OUT;
+        contextRef.current.lineWidth = size;
+      } else {
+        contextRef.current.globalCompositeOperation =
+          GlobalCompositeOperation.SOURCE_OVER;
+        contextRef.current.strokeStyle = color;
+        contextRef.current.lineWidth = size;
+      }
+
+      contextRef.current.stroke();
+    }
   };
+
+  const getCursor = (tool: ToolProps) => {
+    switch (tool) {
+      case Tool.DRAW:
+        return 'cursor-default';
+      case Tool.ERASE:
+        return 'cursor-eraser';
+      case Tool.TEXT:
+        return 'cursor-text';
+
+      default:
+        return 'cursor-default';
+    }
+  };
+
   return (
-    <div className='flex justify-center items-center shadow-lg m-10 border p-20 border-gray-600 '>
+    <div className='flex justify-center items-center shadow-lg m-10 border p-20 border-gray-600'>
       <canvas
         ref={canvasRef}
-        className='bg-white border-2 border-gray-400 cursor-crosshair'
+        className={classNames(
+          'bg-white border-2 border-gray-400 cursor-crosshair',
+          getCursor(tool)
+        )}
         onMouseUp={handleFinishDrawing}
         onMouseMove={handleDrawing}
         onMouseDown={handleStartDrawing}
@@ -61,4 +113,5 @@ const DrawingBoard = () => {
     </div>
   );
 };
+
 export default DrawingBoard;

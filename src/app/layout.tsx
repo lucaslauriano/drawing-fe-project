@@ -1,3 +1,4 @@
+import { DrawingProvider } from '@/contexts/DrawningProvider';
 import './globals.css';
 import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
@@ -17,7 +18,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <div className='flex w-full h-screen bg-[#282828]'>
           <div className='flex justify-center items-center flex-1'>
-            {children}
+            <DrawingProvider>{children}</DrawingProvider>
           </div>
         </div>
       </body>
