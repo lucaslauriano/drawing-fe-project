@@ -2,6 +2,8 @@
 
 import { useRouter } from 'next/navigation';
 import { PiPlusCircleDuotone } from 'react-icons/pi';
+import { SiAdobephotoshop } from 'react-icons/si';
+
 const DashboardPage = () => {
   const router = useRouter();
 
@@ -13,6 +15,7 @@ const DashboardPage = () => {
     <main className='flex w-full h-screen items-center justify-center'>
       <div className='h-[400px] w-[600px] rounded-md bg-gray-600 flex items-center justify-center'>
         <div className='text-center '>
+          <SiAdobephotoshop className='mx-auto h-12 w-12' />
           <h3 className='my-6 text-sm font-semibold text-white'>Welcome</h3>
           <p className='mt-1 text-sm text-white'>
             Get started by creating a new draw.
