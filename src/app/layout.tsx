@@ -1,4 +1,4 @@
-import { DrawingProvider } from '@/contexts/DrawningProvider';
+import { DrawingProvider } from '@/contexts/DrawingProvider';
 import './globals.css';
 import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });

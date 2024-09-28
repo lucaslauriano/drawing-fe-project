@@ -1,6 +1,6 @@
 'use client';
 
-import { useDrawingContext } from '@/contexts/DrawningProvider';
+import { useDrawingContext } from '@/contexts/DrawingProvider';
 import { FaHouse, FaPen, FaTextHeight } from 'react-icons/fa6';
 import { BiSolidEraser, BiSolidTrash } from 'react-icons/bi';
 import { Tool } from '@/types/entities.d';

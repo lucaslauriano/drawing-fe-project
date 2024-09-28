@@ -1,6 +1,6 @@
 'use client';
 
-import { useDrawingContext } from '@/contexts/DrawningProvider';
+import { useDrawingContext } from '@/contexts/DrawingProvider';
 import {
   Tool,
   LineCap,
