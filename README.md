@@ -18,8 +18,8 @@ You can check out the live demo [here](https://drawing-fe-project.vercel.app/das
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/drawing-app.git
-   cd drawing-app
+   git clone https://github.com/lucaslauriano/drawing-fe-project.git
+   cd drawing-fe-project
    ```
 
 2. First, install the dependencies:
