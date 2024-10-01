@@ -12,7 +12,7 @@ const DashboardPage = () => {
   };
 
   return (
-    <main className='flex w-full h-screen items-center justify-center'>
+    <main className='flex w-full h-screen items-center justify-center p-8'>
       <div className='h-[400px] w-[600px] rounded-md bg-gray-600 flex items-center justify-center'>
         <div className='text-center '>
           <SiAdobephotoshop className='mx-auto h-12 w-12' />

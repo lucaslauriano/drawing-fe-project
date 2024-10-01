@@ -5,26 +5,24 @@ import {
   Tool,
   LineCap,
   ToolProps,
-  CANVAS_WIDTH,
-  CANVAS_HEIGHT,
   INITIAL_LINE_WIDTH,
   GlobalCompositeOperation,
 } from '@/types/entities.d';
 import { classNames } from '@/utils/classNames';
 import { useCallback, useEffect, useRef, useState } from 'react';
-
 const DrawingBoard = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const { tool, size, color } = useDrawingContext();
 
-  const initCanvas = useCallback(() => {
+  const resizeCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    canvas.width = CANVAS_WIDTH;
-    canvas.height = CANVAS_HEIGHT;
+    canvas.width = window.innerWidth * 0.9;
+    canvas.height = window.innerHeight * 0.8;
+
     const context = canvas.getContext('2d');
     if (!context) return;
 
@@ -34,8 +32,10 @@ const DrawingBoard = () => {
   }, []);
 
   useEffect(() => {
-    initCanvas();
-  }, [initCanvas]);
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    return () => window.removeEventListener('resize', resizeCanvas);
+  }, [resizeCanvas]);
 
   const resetGlobalCompositeOperation = () => {
     if (contextRef.current) {
@@ -108,13 +108,14 @@ const DrawingBoard = () => {
   };
 
   return (
-    <div className='flex justify-center items-center shadow-lg m-10 border p-20 border-gray-600'>
+    <div className='flex p-4 h-screen justify-center items-center shadow-lg m-10 border lg:p-10 border-gray-600'>
       <canvas
         ref={canvasRef}
         className={classNames(
-          'bg-white border-2 border-gray-400 cursor-crosshair',
+          'bg-white border-2 border-gray-400 cursor-crosshair w-full max-h-screen',
           getCursor(tool)
         )}
+        onMouseLeave={handleFinishDrawing}
         onMouseUp={handleFinishDrawing}
         onMouseMove={handleDrawing}
         onMouseDown={handleStartDrawing}

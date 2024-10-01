@@ -1,5 +1,3 @@
-export const CANVAS_WIDTH = 1000;
-export const CANVAS_HEIGHT = 600;
 export const INITIAL_LINE_WIDTH = 5;
 
 export enum LineCap {
